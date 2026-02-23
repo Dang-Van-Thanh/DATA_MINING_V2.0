@@ -1,0 +1,30 @@
+# Core data science
+pandas
+numpy
+scikit-learn
+scipy
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Machine learning
+xgboost
+imbalanced-learn
+
+# Association rule mining
+mlxtend
+
+# Jupyter
+jupyter
+ipykernel
+papermill
+
+# Utilities
+pyyaml
+joblib
+tqdm
+
+#App
+streamlit

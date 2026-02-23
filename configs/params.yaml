@@ -1,0 +1,95 @@
+# Cấu hình dự án Bank Marketing
+project:
+  name: "Bank Marketing Analysis"
+  seed: 42
+  test_size: 0.2
+  cv_folds: 5
+
+data:
+  raw_path: "data/raw/bank-full.csv"
+  processed_path: "data/processed/"
+  target_col: "y"
+  id_col: null
+
+preprocessing:
+  handle_missing: "drop"  # drop, mean, median, mode
+  scale_numeric: true
+  encoding: "onehot"  # onehot, label
+  handle_imbalance: true
+  imbalance_method: "smote"  # smote, random_oversample, class_weight
+
+features:
+  numeric_cols: ["age", "balance", "day", "duration", "campaign", "pdays", "previous"]
+  categorical_cols: ["job", "marital", "education", "default", "housing", "loan", "contact", "month", "poutcome"]
+  target_mapping: {"no": 0, "yes": 1}
+
+association_rules:
+  min_support: 0.01
+  min_confidence: 0.5
+  min_lift: 1.2
+  max_len: 3
+
+clustering:
+  n_clusters: 4
+  random_state: 42
+  scaling: true
+
+models:
+
+  logistic_regression:
+    enabled: true
+    is_baseline: true
+    description: "Baseline 1 - Mô hình tuyến tính đơn giản"
+    params:
+      C: 1.0
+      max_iter: 1000
+      class_weight: "balanced"
+      random_state: 42
+  
+  decision_tree:
+    enabled: true
+    is_baseline: true
+    description: "Baseline 2 - Cây quyết định, có thể capture non-linear"
+    params:
+      max_depth: 5
+      min_samples_split: 10
+      min_samples_leaf: 5
+      class_weight: "balanced"
+      random_state: 42
+  
+  xgboost:
+    enabled: true
+    is_baseline: false
+    description: "Improved Model - Gradient boosting với regularization"
+    params:
+      n_estimators: 200
+      max_depth: 8
+      learning_rate: 0.05
+      subsample: 0.8
+      colsample_bytree: 0.8
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      scale_pos_weight: 1 
+      random_state: 42
+
+semi_supervised:
+  enabled: true
+  label_ratios: [0.05, 0.10, 0.20, 0.30]  # % nhãn được giữ lại
+  confidence_threshold: 0.8
+  max_iterations: 10
+
+evaluation:
+  classification_metrics: ["accuracy", "precision", "recall", "f1", "roc_auc", "pr_auc"]
+  regression_metrics: ["mae", "rmse", "r2"]
+  clustering_metrics: ["silhouette", "davies_bouldin"]
+
+output:
+  figures_dir: "outputs/figures/"
+  tables_dir: "outputs/tables/"
+  models_dir: "outputs/models/"
+  reports_dir: "outputs/reports/"
+
+paths:
+  models: outputs/models
+  reports: outputs/reports
+  tables: outputs/tables
